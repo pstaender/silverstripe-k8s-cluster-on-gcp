@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: silverstripe-test
+  labels:
+    tier: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: silverstripe-test
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: silverstripe-test
+        tier: backend
+    spec:
+      containers:
+        - name: silverstripe-test
+          image: gcr.io/…/silverstripe-test:latest
+          env:
+            - name: SS_ENVIRONMENT_TYPE
+              value: "live"
+            - name: SS_DATABASE_CLASS
+              value: "MySQLPDODatabase"
+            - name: SS_DATABASE_USERNAME
+              value: "silverstripe_test"
+            - name: SS_DATABASE_SERVER
+              value: "78.46.151.76"
+            - name: SS_DATABASE_PORTPORT
+              value: "3306"
+            - name: SS_DATABASE_NAME
+              value: "silverstripe_test"
+            - name: SS_DATABASE_PASSWORD
+              value: "…"
+            - name: AWS_BUCKET_NAME
+              value: "zeitpulse-assets-conf"
+            - name: AWS_REGION
+              value: "eu-central-1"
+            - name: AWS_ACCESS_KEY_ID
+              value: "…"
+            - name: AWS_SECRET_ACCESS_KEY
+              value: "…"
+            - name: SS_FLUSH_ON_DEPLOY
+              value: "true"
+            - name: REDIS_URL
+              value: '…-redis-master:6379'
+            - name: SS_DEFAULT_ADMIN_USERNAME
+              value: 'admin'
+            - name: SS_DEFAULT_ADMIN_PASSWORD
+              value: 'password'
+          livenessProbe:
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            httpGet:
+              path: /healthz
+              port: 80

@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: nginx
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "kubernetes-ingress"
+spec:
+  backend:
+    serviceName: silverstripe-test
+    servicePort: 80
+  rules:
+    - host: myexample.silverstripe.site
+      http:
+        paths:
+        - backend:
+            serviceName: silverstripe-test
+            servicePort: 80
